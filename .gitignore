@@ -46,7 +46,7 @@ out/
 # other stuff
 run/
 
-linearpaper-server
-linearpaper-api
+linearpurpur-server
+linearpurpur-api
 
 !gradle/wrapper/gradle-wrapper.jar

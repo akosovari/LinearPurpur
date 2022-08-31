@@ -5,6 +5,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "linearpaper"
+rootProject.name = "linearpurpur"
 
-include("linearpaper-api", "linearpaper-server")
+include("linearpurpur-api", "linearpurpur-server")

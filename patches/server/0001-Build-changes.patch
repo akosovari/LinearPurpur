@@ -5,78 +5,66 @@ Subject: [PATCH] Build changes
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 2374cc9bab5039d0a0dc11d4b2ec573ab75778a7..7c159a0693b9529b24258ac3090ba6ee7758a567 100644
+index dc00d06f9bd4cc7403e0fe89822ed40ed2e148c8..cc5621076421d029aab88d14febc1d3757ead0eb 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -9,8 +9,12 @@ plugins {
+@@ -9,12 +9,12 @@ plugins {
  }
  
  dependencies {
--    implementation(project(":paper-api"))
--    implementation(project(":paper-mojangapi"))
-+    // LinearPaper start
-+    implementation(project(":linearpaper-api"))
-+    implementation("io.papermc.paper:paper-mojangapi:1.19.2-R0.1-SNAPSHOT") {
-+        exclude("io.papermc.paper", "paper-api")
-+    }
-+    // LinearPaper end
+-    implementation(project(":purpur-api")) // Purpur
+-    // Pufferfish start
++    // LinearPurpur start
++    implementation(project(":linearpurpur-api"))
+     implementation("io.papermc.paper:paper-mojangapi:1.19.2-R0.1-SNAPSHOT") {
+         exclude("io.papermc.paper", "paper-api")
+     }
+-    // Pufferfish end
++    // LinearPurpur end
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
-@@ -64,7 +68,7 @@ tasks.jar {
+@@ -87,7 +87,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
--            "Implementation-Version" to "git-Paper-$implementationVersion",
-+            "Implementation-Version" to "git-LinearPaper-$implementationVersion", // LinearPaper
+-            "Implementation-Version" to "git-Purpur-$implementationVersion",// Purpur
++            "Implementation-Version" to "git-LinearPurpur-$implementationVersion", // LinearPurpur
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
-@@ -163,7 +167,7 @@ fun TaskContainer.registerRunTask(
+@@ -186,7 +186,7 @@ fun TaskContainer.registerRunTask(
      name: String,
      block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
--    group = "paper"
-+    group = "paperweight" // LinearPaper
+-    group = "paperweight" // Purpur
++    group = "paperweight" // LinearPurpur
      mainClass.set("org.bukkit.craftbukkit.Main")
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
-diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index d2161a3c3b9a2b2d463ac778656c95167c10a49d..a8ce4df4c9acefaf784ca71726667cbea32abe1f 100644
---- a/src/main/java/net/minecraft/server/MinecraftServer.java
-+++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1673,7 +1673,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
- 
-     @DontObfuscate
-     public String getServerModName() {
--        return "Paper"; // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "LinearPaper"; // LinearPaper - LinearPaper > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-     }
- 
-     public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index b443aba38258f501f8f00be6b055f07b709277c4..0fd4ce8c311fba70e19ed9ddc029a492a8b9f4c2 100644
+index d182eac78879b5e124bb62aded8a405b327275b4..0a10ac462e1aeb3c61a466d7b6e5eb781143eced 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -248,7 +248,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
--    private final String serverName = "Paper"; // Paper
-+    private final String serverName = "LinearPaper"; // LinearPaper // Paper
+-    private final String serverName = "Purpur"; // Paper // Purpur
++    private final String serverName = "LinearPurpur"; // LinearPurpur // Paper
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 774556a62eb240da42e84db4502e2ed43495be17..e3e03731260ca24afe35995866fd0fcc32f8bd61 100644
+index fb87620c742ff7912f5e8ccd2a7930dd605576d9..9d6c4aecd9acdc695fdf09ff2da0b4f5b943c799 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
      public static String getBukkitVersion() {
          String result = "Unknown-Version";
  
--        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/io.papermc.paper/paper-api/pom.properties");
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/me.endcrystal.linearpaper/linearpaper-api/pom.properties"); // LinearPaper
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.purpurmc.purpur/purpur-api/pom.properties"); // Purpur
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/me.endcrystal.linearpurpur/linearpurpur-api/pom.properties"); // LinearPurpur
          Properties properties = new Properties();
  
          if (stream != null) {
